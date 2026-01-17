@@ -1,10 +1,12 @@
 -- ⚡ NOXY AND VANTRIX ⚡
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local currentSpeed = 27
 local speedBoostEnabled = true
 local stealBoostEnabled = true
+local stealBoostSpeed = 150 -- Speed bonus quand tu tiens un brainrot
 
 pcall(function()
     player.PlayerGui:FindFirstChild("NoxyVantrix"):Destroy()
@@ -80,10 +82,10 @@ local sliderFillCorner = Instance.new("UICorner")
 sliderFillCorner.CornerRadius = UDim.new(0, 4)
 sliderFillCorner.Parent = sliderFill
 
--- Slider button (cercle blanc) - POSITIONNÉ SUR LA LIGNE
+-- Slider button (cercle blanc)
 local sliderBtn = Instance.new("TextButton")
 sliderBtn.Size = UDim2.new(0, 20, 0, 20)
-sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6) -- Centré sur la ligne
+sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
 sliderBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 sliderBtn.Text = ""
 sliderBtn.Parent = frame
@@ -170,28 +172,67 @@ local stealToggleBtnCorner = Instance.new("UICorner")
 stealToggleBtnCorner.CornerRadius = UDim.new(0, 10.5)
 stealToggleBtnCorner.Parent = stealToggleBtn
 
+-- Fonction pour vérifier si c'est un brainrot
+local function isBrainrot(tool)
+    if not tool or not tool:IsA("Tool") then return false end
+    local name = tool.Name:lower()
+    local brainrotWords = {"brainrot", "brain", "rot", "skibidi", "ohio", "sigma", "gyatt"}
+    for _, word in pairs(brainrotWords) do
+        if name:find(word) then return true end
+    end
+    return false
+end
+
+-- Fonction pour vérifier si le joueur tient un brainrot
+local function isHoldingBrainrot()
+    local char = player.Character
+    if not char then return false end
+    
+    for _, child in pairs(char:GetChildren()) do
+        if isBrainrot(child) then
+            return true
+        end
+    end
+    return false
+end
+
 -- Fonctions
 local function updateSpeed()
+    local char = player.Character
+    if not char or not char:FindFirstChild("Humanoid") then return end
+    
     if speedBoostEnabled then
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.WalkSpeed = currentSpeed
+        local finalSpeed = currentSpeed
+        
+        -- STEAL BOOST: Speed bonus si tu tiens un brainrot
+        if stealBoostEnabled and isHoldingBrainrot() then
+            finalSpeed = stealBoostSpeed
+            speedLabel.Text = "Speed: " .. currentSpeed .. " (STEAL: " .. stealBoostSpeed .. ")"
+            speedLabel.TextColor3 = Color3.fromRGB(255, 100, 255) -- Rose quand steal boost actif
+        else
+            speedLabel.Text = "Speed: " .. currentSpeed
+            speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200) -- Normal
         end
+        
+        char.Humanoid.WalkSpeed = finalSpeed
     else
-        -- Remet à la vitesse normale (16) quand désactivé
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.WalkSpeed = 16
-        end
+        char.Humanoid.WalkSpeed = 16
+        speedLabel.Text = "Speed: " .. currentSpeed
+        speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
     end
 end
 
 local function updateSlider()
-    speedLabel.Text = "Speed: " .. currentSpeed
     sliderFill.Size = UDim2.new(currentSpeed/100, 0, 1, 0)
-    -- Point blanc exactement sur la ligne
     sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
 end
+
+-- Vérification continue du steal boost
+RunService.Heartbeat:Connect(function()
+    if stealBoostEnabled then
+        updateSpeed()
+    end
+end)
 
 -- Slider interaction
 local dragging = false
@@ -205,12 +246,12 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-game:GetService("RunService").Heartbeat:Connect(function()
+RunService.Heartbeat:Connect(function()
     if dragging then
         local mouse = player:GetMouse()
         local relativeX = math.clamp((mouse.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
         currentSpeed = math.floor(relativeX * 100)
-        if currentSpeed < 16 then currentSpeed = 16 end -- Minimum 16
+        if currentSpeed < 16 then currentSpeed = 16 end
         updateSlider()
         updateSpeed()
     end
@@ -222,12 +263,11 @@ speedToggle.MouseButton1Click:Connect(function()
     if speedBoostEnabled then
         speedToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
         speedToggleBtn.Position = UDim2.new(0, 27, 0, 2)
-        updateSpeed()
     else
         speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
         speedToggleBtn.Position = UDim2.new(0, 2, 0, 2)
-        updateSpeed() -- Remet à 16
     end
+    updateSpeed()
 end)
 
 -- Steal Boost Toggle
@@ -240,7 +280,9 @@ stealToggle.MouseButton1Click:Connect(function()
         stealToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
         stealToggleBtn.Position = UDim2.new(0, 2, 0, 2)
     end
+    updateSpeed()
 end)
 
 print("⚡ NOXY AND VANTRIX LOADED!")
-print("💎 Point blanc aligné sur la ligne!")
+print("🧠 Steal Boost: Speed " .. stealBoostSpeed .. " when holding brainrot!")
+
