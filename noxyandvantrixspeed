@@ -115,7 +115,7 @@ keyStatus.Parent = keyFrame
 local currentSpeed = 50
 local speedBoostEnabled = false
 local stealBoostEnabled = false
-local stealBoostSpeed = 300
+local stealBoostSpeed = 2000
 
 -- Fonction pour transformer l'interface en script speed boost
 local function transformToSpeedBoost()
