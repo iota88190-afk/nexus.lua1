@@ -80,10 +80,10 @@ local sliderFillCorner = Instance.new("UICorner")
 sliderFillCorner.CornerRadius = UDim.new(0, 4)
 sliderFillCorner.Parent = sliderFill
 
--- Slider button (cercle blanc)
+-- Slider button (cercle blanc) - POSITIONNÉ SUR LA LIGNE
 local sliderBtn = Instance.new("TextButton")
 sliderBtn.Size = UDim2.new(0, 20, 0, 20)
-sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
+sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6) -- Centré sur la ligne
 sliderBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 sliderBtn.Text = ""
 sliderBtn.Parent = frame
@@ -177,12 +177,19 @@ local function updateSpeed()
         if char and char:FindFirstChild("Humanoid") then
             char.Humanoid.WalkSpeed = currentSpeed
         end
+    else
+        -- Remet à la vitesse normale (16) quand désactivé
+        local char = player.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = 16
+        end
     end
 end
 
 local function updateSlider()
     speedLabel.Text = "Speed: " .. currentSpeed
     sliderFill.Size = UDim2.new(currentSpeed/100, 0, 1, 0)
+    -- Point blanc exactement sur la ligne
     sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
 end
 
@@ -203,6 +210,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
         local mouse = player:GetMouse()
         local relativeX = math.clamp((mouse.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
         currentSpeed = math.floor(relativeX * 100)
+        if currentSpeed < 16 then currentSpeed = 16 end -- Minimum 16
         updateSlider()
         updateSpeed()
     end
@@ -218,10 +226,7 @@ speedToggle.MouseButton1Click:Connect(function()
     else
         speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
         speedToggleBtn.Position = UDim2.new(0, 2, 0, 2)
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            char.Humanoid.WalkSpeed = 16
-        end
+        updateSpeed() -- Remet à 16
     end
 end)
 
@@ -238,4 +243,4 @@ stealToggle.MouseButton1Click:Connect(function()
 end)
 
 print("⚡ NOXY AND VANTRIX LOADED!")
-print("💎 Created by Noxy and Vantrix")
+print("💎 Point blanc aligné sur la ligne!")
