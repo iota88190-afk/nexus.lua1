@@ -22,6 +22,49 @@ frame.BorderSizePixel = 1
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
+-- TRAIT ESP COULEUR - À AJOUTER DANS TON SCRIPT
+local RunService = game:GetService("RunService")
+local espLine = nil
+local espConnection = nil
+
+-- Fonction pour mettre à jour le trait
+local function updateESPLine()
+    if not basePosition then return end
+    
+    local char = player.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    
+    local playerPos = char.HumanoidRootPart.Position
+    local distance = (playerPos - basePosition).Magnitude
+    
+    -- Supprime l'ancien trait
+    if espLine then
+        espLine:Destroy()
+    end
+    
+    -- Crée le nouveau trait coloré
+    espLine = Instance.new("Part")
+    espLine.Name = "ESPLine"
+    espLine.Anchored = true
+    espLine.CanCollide = false
+    espLine.Material = Enum.Material.Neon
+    espLine.BrickColor = BrickColor.new("Bright orange") -- Change la couleur ici
+    espLine.Size = Vector3.new(0.3, 0.3, distance)
+    espLine.CFrame = CFrame.lookAt(playerPos:Lerp(basePosition, 0.5), basePosition)
+    espLine.Parent = workspace
+    espLine.Transparency = 0.2
+end
+
+-- Démarre le trait ESP
+local function startESP()
+    if espConnection then
+        espConnection:Disconnect()
+    end
+    espConnection = RunService.Heartbeat:Connect(updateESPLine)
+end
+
+-- Dans ton bouton save, ajoute cette ligne :
+-- startESP()
 
 -- Titre
 local title = Instance.new("TextLabel")
