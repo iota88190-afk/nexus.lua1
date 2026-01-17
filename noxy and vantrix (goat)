@@ -414,7 +414,7 @@ end)
 -- Get Key button - Copie le lien Discord
 getKeyBtn.MouseButton1Click:Connect(function()
     if setclipboard then
-        setclipboard("https://discord.gg/noxyandvantrix")
+        setclipboard("https://discord.gg/KGsEVDCS")
         keyStatus.Text = "🔗 Discord link copied! Join for keys"
         keyStatus.TextColor3 = Color3.fromRGB(0, 255, 255)
         getKeyBtn.Text = "✅ COPIED"
@@ -426,7 +426,7 @@ getKeyBtn.MouseButton1Click:Connect(function()
         keyStatus.Text = "💎 Join Discord for keys | Created by Noxy and Vantrix"
         keyStatus.TextColor3 = Color3.fromRGB(150, 150, 150)
     else
-        keyStatus.Text = "🔗 Discord: discord.gg/noxyandvantrix"
+        keyStatus.Text = "🔗 Discord: discord.gg/KGsEVDCS"
         keyStatus.TextColor3 = Color3.fromRGB(0, 255, 255)
     end
 end)
