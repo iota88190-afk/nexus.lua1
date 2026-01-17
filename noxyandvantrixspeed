@@ -1,0 +1,410 @@
+-- ⚡ NOXY AND VANTRIX - KEY SYSTEM ⚡
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+
+-- SYSTÈME DE KEY
+local correctKey = "noxyleboss"
+
+-- GUI Key System
+local keyGui = Instance.new("ScreenGui")
+keyGui.Name = "NoxyVantrixKey"
+keyGui.ResetOnSpawn = false
+keyGui.Parent = player.PlayerGui
+
+local keyFrame = Instance.new("Frame")
+keyFrame.Size = UDim2.new(0, 350, 0, 200)
+keyFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+keyFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+keyFrame.BorderSizePixel = 0
+keyFrame.Active = true
+keyFrame.Draggable = true
+keyFrame.Parent = keyGui
+
+local keyCorner = Instance.new("UICorner")
+keyCorner.CornerRadius = UDim.new(0, 15)
+keyCorner.Parent = keyFrame
+
+local keyBorder = Instance.new("UIStroke")
+keyBorder.Color = Color3.fromRGB(0, 255, 150)
+keyBorder.Thickness = 3
+keyBorder.Parent = keyFrame
+
+-- Titre Key System
+local keyTitle = Instance.new("TextLabel")
+keyTitle.Size = UDim2.new(1, 0, 0, 50)
+keyTitle.Position = UDim2.new(0, 0, 0, 10)
+keyTitle.BackgroundTransparency = 1
+keyTitle.Text = "⚡ NOXY AND VANTRIX ⚡"
+keyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyTitle.TextSize = 22
+keyTitle.Font = Enum.Font.GothamBold
+keyTitle.Parent = keyFrame
+
+local keySubtitle = Instance.new("TextLabel")
+keySubtitle.Size = UDim2.new(1, 0, 0, 25)
+keySubtitle.Position = UDim2.new(0, 0, 0, 60)
+keySubtitle.BackgroundTransparency = 1
+keySubtitle.Text = "🔐 Enter Key to Access Premium Features"
+keySubtitle.TextColor3 = Color3.fromRGB(200, 200, 200)
+keySubtitle.TextSize = 14
+keySubtitle.Font = Enum.Font.Gotham
+keySubtitle.Parent = keyFrame
+
+-- Input Key
+local keyInput = Instance.new("TextBox")
+keyInput.Size = UDim2.new(0.8, 0, 0, 35)
+keyInput.Position = UDim2.new(0.1, 0, 0, 95)
+keyInput.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+keyInput.BorderSizePixel = 0
+keyInput.Text = ""
+keyInput.PlaceholderText = "Enter your key here..."
+keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+keyInput.TextSize = 14
+keyInput.Font = Enum.Font.Gotham
+keyInput.Parent = keyFrame
+
+local keyInputCorner = Instance.new("UICorner")
+keyInputCorner.CornerRadius = UDim.new(0, 8)
+keyInputCorner.Parent = keyInput
+
+-- Bouton Submit
+local submitBtn = Instance.new("TextButton")
+submitBtn.Size = UDim2.new(0.35, 0, 0, 30)
+submitBtn.Position = UDim2.new(0.1, 0, 0, 145)
+submitBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+submitBtn.Text = "🔓 SUBMIT KEY"
+submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+submitBtn.TextSize = 12
+submitBtn.Font = Enum.Font.GothamBold
+submitBtn.Parent = keyFrame
+
+local submitBtnCorner = Instance.new("UICorner")
+submitBtnCorner.CornerRadius = UDim.new(0, 8)
+submitBtnCorner.Parent = submitBtn
+
+-- Bouton Get Key
+local getKeyBtn = Instance.new("TextButton")
+getKeyBtn.Size = UDim2.new(0.35, 0, 0, 30)
+getKeyBtn.Position = UDim2.new(0.55, 0, 0, 145)
+getKeyBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
+getKeyBtn.Text = "🔑 GET KEY"
+getKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKeyBtn.TextSize = 12
+getKeyBtn.Font = Enum.Font.GothamBold
+getKeyBtn.Parent = keyFrame
+
+local getKeyBtnCorner = Instance.new("UICorner")
+getKeyBtnCorner.CornerRadius = UDim.new(0, 8)
+getKeyBtnCorner.Parent = getKeyBtn
+
+-- Status Key
+local keyStatus = Instance.new("TextLabel")
+keyStatus.Size = UDim2.new(1, 0, 0, 15)
+keyStatus.Position = UDim2.new(0, 0, 0, 180)
+keyStatus.BackgroundTransparency = 1
+keyStatus.Text = "💎 Key: noxyleboss | Created by Noxy and Vantrix"
+keyStatus.TextColor3 = Color3.fromRGB(150, 150, 150)
+keyStatus.TextSize = 10
+keyStatus.Font = Enum.Font.Gotham
+keyStatus.Parent = keyFrame
+
+-- Variables pour le script principal
+local currentSpeed = 50
+local speedBoostEnabled = false
+local stealBoostEnabled = false
+local stealBoostSpeed = 300
+
+-- Fonction pour transformer l'interface en script speed boost
+local function transformToSpeedBoost()
+    -- Supprime les éléments de key
+    keySubtitle:Destroy()
+    keyInput:Destroy()
+    submitBtn:Destroy()
+    getKeyBtn:Destroy()
+    keyStatus:Destroy()
+    
+    -- Redimensionne le frame
+    keyFrame:TweenSize(UDim2.new(0, 300, 0, 200), "Out", "Quad", 0.5, true)
+    keyFrame:TweenPosition(UDim2.new(0.5, -150, 0.5, -100), "Out", "Quad", 0.5, true)
+    
+    wait(0.5)
+    
+    -- Change le titre
+    keyTitle.Text = "⚡ NOXY AND VANTRIX ⚡"
+    keyTitle.TextSize = 20
+    
+    -- Speed label
+    local speedLabel = Instance.new("TextLabel")
+    speedLabel.Size = UDim2.new(1, 0, 0, 25)
+    speedLabel.Position = UDim2.new(0, 0, 0, 60)
+    speedLabel.BackgroundTransparency = 1
+    speedLabel.Text = "Speed: " .. currentSpeed
+    speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    speedLabel.TextSize = 16
+    speedLabel.Font = Enum.Font.Gotham
+    speedLabel.Parent = keyFrame
+
+    -- Slider background
+    local sliderBg = Instance.new("Frame")
+    sliderBg.Size = UDim2.new(0.8, 0, 0, 8)
+    sliderBg.Position = UDim2.new(0.1, 0, 0, 95)
+    sliderBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    sliderBg.BorderSizePixel = 0
+    sliderBg.Parent = keyFrame
+
+    local sliderBgCorner = Instance.new("UICorner")
+    sliderBgCorner.CornerRadius = UDim.new(0, 4)
+    sliderBgCorner.Parent = sliderBg
+
+    -- Slider fill
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Size = UDim2.new(currentSpeed/500, 0, 1, 0)
+    sliderFill.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+    sliderFill.BorderSizePixel = 0
+    sliderFill.Parent = sliderBg
+
+    local sliderFillCorner = Instance.new("UICorner")
+    sliderFillCorner.CornerRadius = UDim.new(0, 4)
+    sliderFillCorner.Parent = sliderFill
+
+    -- Slider button
+    local sliderBtn = Instance.new("TextButton")
+    sliderBtn.Size = UDim2.new(0, 20, 0, 20)
+    sliderBtn.Position = UDim2.new(currentSpeed/500, -10, 0, -6)
+    sliderBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    sliderBtn.Text = ""
+    sliderBtn.Parent = keyFrame
+
+    local sliderBtnCorner = Instance.new("UICorner")
+    sliderBtnCorner.CornerRadius = UDim.new(0, 10)
+    sliderBtnCorner.Parent = sliderBtn
+
+    -- Speed Boost Toggle
+    local speedBoostFrame = Instance.new("Frame")
+    speedBoostFrame.Size = UDim2.new(1, 0, 0, 30)
+    speedBoostFrame.Position = UDim2.new(0, 0, 0, 125)
+    speedBoostFrame.BackgroundTransparency = 1
+    speedBoostFrame.Parent = keyFrame
+
+    local speedBoostLabel = Instance.new("TextLabel")
+    speedBoostLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    speedBoostLabel.Position = UDim2.new(0.05, 0, 0, 0)
+    speedBoostLabel.BackgroundTransparency = 1
+    speedBoostLabel.Text = "Speed Boost"
+    speedBoostLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    speedBoostLabel.TextSize = 16
+    speedBoostLabel.Font = Enum.Font.Gotham
+    speedBoostLabel.TextXAlignment = Enum.TextXAlignment.Left
+    speedBoostLabel.Parent = speedBoostFrame
+
+    local speedToggle = Instance.new("TextButton")
+    speedToggle.Size = UDim2.new(0, 50, 0, 25)
+    speedToggle.Position = UDim2.new(0.75, 0, 0, 2.5)
+    speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    speedToggle.Text = ""
+    speedToggle.Parent = speedBoostFrame
+
+    local speedToggleCorner = Instance.new("UICorner")
+    speedToggleCorner.CornerRadius = UDim.new(0, 12.5)
+    speedToggleCorner.Parent = speedToggle
+
+    local speedToggleBtn = Instance.new("Frame")
+    speedToggleBtn.Size = UDim2.new(0, 21, 0, 21)
+    speedToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+    speedToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    speedToggleBtn.Parent = speedToggle
+
+    local speedToggleBtnCorner = Instance.new("UICorner")
+    speedToggleBtnCorner.CornerRadius = UDim.new(0, 10.5)
+    speedToggleBtnCorner.Parent = speedToggleBtn
+
+    -- Steal Boost Toggle
+    local stealBoostFrame = Instance.new("Frame")
+    stealBoostFrame.Size = UDim2.new(1, 0, 0, 30)
+    stealBoostFrame.Position = UDim2.new(0, 0, 0, 160)
+    stealBoostFrame.BackgroundTransparency = 1
+    stealBoostFrame.Parent = keyFrame
+
+    local stealBoostLabel = Instance.new("TextLabel")
+    stealBoostLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    stealBoostLabel.Position = UDim2.new(0.05, 0, 0, 0)
+    stealBoostLabel.BackgroundTransparency = 1
+    stealBoostLabel.Text = "Steal Boost"
+    stealBoostLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    stealBoostLabel.TextSize = 16
+    stealBoostLabel.Font = Enum.Font.Gotham
+    stealBoostLabel.TextXAlignment = Enum.TextXAlignment.Left
+    stealBoostLabel.Parent = stealBoostFrame
+
+    local stealToggle = Instance.new("TextButton")
+    stealToggle.Size = UDim2.new(0, 50, 0, 25)
+    stealToggle.Position = UDim2.new(0.75, 0, 0, 2.5)
+    stealToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    stealToggle.Text = ""
+    stealToggle.Parent = stealBoostFrame
+
+    local stealToggleCorner = Instance.new("UICorner")
+    stealToggleCorner.CornerRadius = UDim.new(0, 12.5)
+    stealToggleCorner.Parent = stealToggle
+
+    local stealToggleBtn = Instance.new("Frame")
+    stealToggleBtn.Size = UDim2.new(0, 21, 0, 21)
+    stealToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+    stealToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    stealToggleBtn.Parent = stealToggle
+
+    local stealToggleBtnCorner = Instance.new("UICorner")
+    stealToggleBtnCorner.CornerRadius = UDim.new(0, 10.5)
+    stealToggleBtnCorner.Parent = stealToggleBtn
+
+    -- Fonctions du script
+    local function isBrainrot(tool)
+        if not tool or not tool:IsA("Tool") then return false end
+        local name = tool.Name:lower()
+        local brainrotWords = {"brainrot", "brain", "rot", "skibidi", "ohio", "sigma", "gyatt"}
+        for _, word in pairs(brainrotWords) do
+            if name:find(word) then return true end
+        end
+        return false
+    end
+
+    local function isHoldingBrainrot()
+        local char = player.Character
+        if not char then return false end
+        for _, child in pairs(char:GetChildren()) do
+            if isBrainrot(child) then return true end
+        end
+        return false
+    end
+
+    local function updateSpeed()
+        local char = player.Character
+        if not char or not char:FindFirstChild("Humanoid") then return end
+        
+        if speedBoostEnabled then
+            local finalSpeed = currentSpeed
+            if stealBoostEnabled and isHoldingBrainrot() then
+                finalSpeed = stealBoostSpeed
+                speedLabel.Text = "Speed: " .. currentSpeed .. " (STEAL: " .. stealBoostSpeed .. ")"
+                speedLabel.TextColor3 = Color3.fromRGB(255, 100, 255)
+            else
+                speedLabel.Text = "Speed: " .. currentSpeed
+                speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            end
+            char.Humanoid.WalkSpeed = finalSpeed
+        else
+            char.Humanoid.WalkSpeed = 16
+            speedLabel.Text = "Speed: " .. currentSpeed
+            speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        end
+    end
+
+    local function updateSlider()
+        sliderFill.Size = UDim2.new(currentSpeed/500, 0, 1, 0)
+        sliderBtn.Position = UDim2.new(currentSpeed/500, -10, 0, -6)
+    end
+
+    -- Slider interaction
+    local dragging = false
+    sliderBtn.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+
+    game:GetService("UserInputService").InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    RunService.Heartbeat:Connect(function()
+        if dragging then
+            local mouse = player:GetMouse()
+            local relativeX = math.clamp((mouse.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
+            currentSpeed = math.floor(relativeX * 500)
+            if currentSpeed < 16 then currentSpeed = 16 end
+            updateSlider()
+            updateSpeed()
+        end
+        if stealBoostEnabled then
+            updateSpeed()
+        end
+    end)
+
+    -- Speed Boost Toggle
+    speedToggle.MouseButton1Click:Connect(function()
+        speedBoostEnabled = not speedBoostEnabled
+        if speedBoostEnabled then
+            speedToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+            speedToggleBtn.Position = UDim2.new(0, 27, 0, 2)
+        else
+            speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+            speedToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+        end
+        updateSpeed()
+    end)
+
+    -- Steal Boost Toggle
+    stealToggle.MouseButton1Click:Connect(function()
+        stealBoostEnabled = not stealBoostEnabled
+        if stealBoostEnabled then
+            stealToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+            stealToggleBtn.Position = UDim2.new(0, 27, 0, 2)
+        else
+            stealToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+            stealToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+        end
+        updateSpeed()
+    end)
+
+    -- Auto-applique après respawn
+    player.CharacterAdded:Connect(function(char)
+        wait(1)
+        updateSpeed()
+    end)
+
+    print("⚡ NOXY AND VANTRIX PREMIUM LOADED!")
+    print("🔑 Key validated: noxyleboss")
+end
+
+-- Vérification de la key
+submitBtn.MouseButton1Click:Connect(function()
+    local enteredKey = keyInput.Text
+    
+    if enteredKey == correctKey then
+        keyStatus.Text = "✅ Key Correct! Loading..."
+        keyStatus.TextColor3 = Color3.fromRGB(0, 255, 0)
+        submitBtn.Text = "✅ SUCCESS"
+        submitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        
+        wait(1)
+        transformToSpeedBoost()
+    else
+        keyStatus.Text = "❌ Wrong Key! Try: noxyleboss"
+        keyStatus.TextColor3 = Color3.fromRGB(255, 0, 0)
+        submitBtn.Text = "❌ WRONG KEY"
+        submitBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        wait(2)
+        submitBtn.Text = "🔓 SUBMIT KEY"
+        submitBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        keyStatus.Text = "💎 Key: noxyleboss | Created by Noxy and Vantrix"
+        keyStatus.TextColor3 = Color3.fromRGB(150, 150, 150)
+    end
+end)
+
+-- Get Key button
+getKeyBtn.MouseButton1Click:Connect(function()
+    keyInput.Text = correctKey
+    keyStatus.Text = "🔑 Key copied to input box!"
+    keyStatus.TextColor3 = Color3.fromRGB(0, 255, 255)
+    
+    wait(2)
+    keyStatus.Text = "💎 Key: noxyleboss | Created by Noxy and Vantrix"
+    keyStatus.TextColor3 = Color3.fromRGB(150, 150, 150)
+end)
+
+print("🔐 NOXY AND VANTRIX KEY SYSTEM LOADED!")
+print("🔑 Key required: noxyleboss")
