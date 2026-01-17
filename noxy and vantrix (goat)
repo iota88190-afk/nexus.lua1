@@ -9,8 +9,9 @@ local validKeys = {
     "noxyleboss",
     "vantrixpro2024",
     "speedboost",
-    "premiumkey"
-}
+    "premiumkey",
+    "9AJD8IYBZ9SUZ19DV1B8YVZ9UB8"
+}  
 
 -- GUI Key System
 local keyGui = Instance.new("ScreenGui")
