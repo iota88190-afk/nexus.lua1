@@ -1,0 +1,166 @@
+-- 🚀 TP SET POSITION - FORCE STAY 🚀
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local savedPositions = {}
+
+pcall(function()
+    player.PlayerGui:FindFirstChild("TPSetPosition"):Destroy()
+end)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "TPSetPosition"
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 180, 0, 140)
+frame.Position = UDim2.new(0, 50, 0, 50)
+frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.3)
+frame.BorderColor3 = Color3.new(1, 1, 1)
+frame.BorderSizePixel = 2
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 25)
+title.BackgroundColor3 = Color3.new(0, 0.6, 1)
+title.Text = "TP FORCE STAY"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 12
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+local setBtn1 = Instance.new("TextButton")
+setBtn1.Size = UDim2.new(0.9, 0, 0, 20)
+setBtn1.Position = UDim2.new(0.05, 0, 0, 30)
+setBtn1.BackgroundColor3 = Color3.new(0, 0.8, 0)
+setBtn1.Text = "SET POSITION 1"
+setBtn1.TextColor3 = Color3.new(1, 1, 1)
+setBtn1.TextSize = 10
+setBtn1.Parent = frame
+
+local tpBtn1 = Instance.new("TextButton")
+tpBtn1.Size = UDim2.new(0.9, 0, 0, 20)
+tpBtn1.Position = UDim2.new(0.05, 0, 0, 55)
+tpBtn1.BackgroundColor3 = Color3.new(1, 0.5, 0)
+tpBtn1.Text = "FORCE TP 1"
+tpBtn1.TextColor3 = Color3.new(1, 1, 1)
+tpBtn1.TextSize = 10
+tpBtn1.Parent = frame
+
+local setBtn2 = Instance.new("TextButton")
+setBtn2.Size = UDim2.new(0.9, 0, 0, 20)
+setBtn2.Position = UDim2.new(0.05, 0, 0, 80)
+setBtn2.BackgroundColor3 = Color3.new(0, 0.8, 0)
+setBtn2.Text = "SET POSITION 2"
+setBtn2.TextColor3 = Color3.new(1, 1, 1)
+setBtn2.TextSize = 10
+setBtn2.Parent = frame
+
+local tpBtn2 = Instance.new("TextButton")
+tpBtn2.Size = UDim2.new(0.9, 0, 0, 20)
+tpBtn2.Position = UDim2.new(0.05, 0, 0, 105)
+tpBtn2.BackgroundColor3 = Color3.new(1, 0.5, 0)
+tpBtn2.Text = "FORCE TP 2"
+tpBtn2.TextColor3 = Color3.new(1, 1, 1)
+tpBtn2.TextSize = 10
+tpBtn2.Parent = frame
+
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, 0, 0, 15)
+status.Position = UDim2.new(0, 0, 0, 125)
+status.BackgroundTransparency = 1
+status.Text = "Ready"
+status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+status.TextSize = 8
+status.Parent = frame
+
+-- FORCE TP qui maintient la position
+local function forceTP(position)
+    if not position then return end
+    
+    spawn(function()
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local hrp = char.HumanoidRootPart
+            
+            -- Ancre le joueur
+            hrp.Anchored = true
+            
+            -- TP et maintient la position pendant 5 secondes
+            hrp.CFrame = CFrame.new(position)
+            
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
+                if hrp and hrp.Parent then
+                    hrp.CFrame = CFrame.new(position)
+                end
+            end)
+            
+            status.Text = "Position locked for 5s"
+            status.TextColor3 = Color3.new(1, 1, 0)
+            
+            wait(5)
+            connection:Disconnect()
+            hrp.Anchored = false
+            
+            status.Text = "Ready"
+            status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        end
+    end)
+end
+
+-- Set Position 1
+setBtn1.MouseButton1Click:Connect(function()
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        savedPositions[1] = char.HumanoidRootPart.Position
+        setBtn1.Text = "SAVED!"
+        setBtn1.BackgroundColor3 = Color3.new(0, 1, 0)
+        
+        spawn(function()
+            wait(2)
+            setBtn1.Text = "SET POSITION 1"
+            setBtn1.BackgroundColor3 = Color3.new(0, 0.8, 0)
+        end)
+    end
+end)
+
+-- Force TP 1
+tpBtn1.MouseButton1Click:Connect(function()
+    if savedPositions[1] then
+        forceTP(savedPositions[1])
+    else
+        status.Text = "No position saved!"
+        status.TextColor3 = Color3.new(1, 0, 0)
+    end
+end)
+
+-- Set Position 2
+setBtn2.MouseButton1Click:Connect(function()
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        savedPositions[2] = char.HumanoidRootPart.Position
+        setBtn2.Text = "SAVED!"
+        setBtn2.BackgroundColor3 = Color3.new(0, 1, 0)
+        
+        spawn(function()
+            wait(2)
+            setBtn2.Text = "SET POSITION 2"
+            setBtn2.BackgroundColor3 = Color3.new(0, 0.8, 0)
+        end)
+    end
+end)
+
+-- Force TP 2
+tpBtn2.MouseButton1Click:Connect(function()
+    if savedPositions[2] then
+        forceTP(savedPositions[2])
+    else
+        status.Text = "No position saved!"
+        status.TextColor3 = Color3.new(1, 0, 0)
+    end
+end)
+
+print("FORCE TP LOADED - Position locked for 5 seconds!")
