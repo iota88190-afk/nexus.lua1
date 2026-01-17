@@ -1,8 +1,11 @@
--- 🧠 BRAINROT AUTO TP - DELTA COMPATIBLE 🧠
+-- 🧠 BRAINROT AUTO TP + TRAIT COULEUR - DELTA COMPATIBLE 🧠
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local basePosition = Vector3.new(0, 10, 0)
+local espLine = nil
+local espConnection = nil
 
 pcall(function()
     player.PlayerGui:FindFirstChild("BrainrotAutoTP"):Destroy()
@@ -22,12 +25,38 @@ frame.BorderSizePixel = 1
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
--- TRAIT ESP COULEUR - À AJOUTER DANS TON SCRIPT
-local RunService = game:GetService("RunService")
-local espLine = nil
-local espConnection = nil
 
--- Fonction pour mettre à jour le trait
+-- Titre
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 20)
+title.BackgroundColor3 = Color3.new(0.8, 0.2, 0.8)
+title.Text = "BRAINROT AUTO TP + ESP"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 12
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+-- Bouton Save
+local saveBtn = Instance.new("TextButton")
+saveBtn.Size = UDim2.new(0.9, 0, 0, 18)
+saveBtn.Position = UDim2.new(0.05, 0, 0, 25)
+saveBtn.BackgroundColor3 = Color3.new(0, 0.7, 0)
+saveBtn.Text = "SAVE BASE + ESP"
+saveBtn.TextColor3 = Color3.new(1, 1, 1)
+saveBtn.TextSize = 10
+saveBtn.Parent = frame
+
+-- Status
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, 0, 0, 12)
+status.Position = UDim2.new(0, 0, 0, 48)
+status.BackgroundTransparency = 1
+status.Text = "Ramasse brainrot = TP auto"
+status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+status.TextSize = 8
+status.Parent = frame
+
+-- TRAIT ESP COULEUR
 local function updateESPLine()
     if not basePosition then return end
     
@@ -48,10 +77,12 @@ local function updateESPLine()
     espLine.Anchored = true
     espLine.CanCollide = false
     espLine.Material = Enum.Material.Neon
-    espLine.BrickColor = BrickColor.new("Bright orange") -- Change la couleur ici
+    espLine.BrickColor = BrickColor.new("Bright orange") -- Couleur orange
     espLine.Size = Vector3.new(0.3, 0.3, distance)
     espLine.CFrame = CFrame.lookAt(playerPos:Lerp(basePosition, 0.5), basePosition)
     espLine.Parent = workspace
+    
+    -- Effet brillant
     espLine.Transparency = 0.2
 end
 
@@ -63,38 +94,17 @@ local function startESP()
     espConnection = RunService.Heartbeat:Connect(updateESPLine)
 end
 
--- Dans ton bouton save, ajoute cette ligne :
--- startESP()
-
--- Titre
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 20)
-title.BackgroundColor3 = Color3.new(0.8, 0.2, 0.8)
-title.Text = "BRAINROT AUTO TP"
-title.TextColor3 = Color3.new(1, 1, 1)
-title.TextSize = 12
-title.Font = Enum.Font.SourceSansBold
-title.Parent = frame
-
--- Bouton Save
-local saveBtn = Instance.new("TextButton")
-saveBtn.Size = UDim2.new(0.9, 0, 0, 18)
-saveBtn.Position = UDim2.new(0.05, 0, 0, 25)
-saveBtn.BackgroundColor3 = Color3.new(0, 0.7, 0)
-saveBtn.Text = "SAVE BASE"
-saveBtn.TextColor3 = Color3.new(1, 1, 1)
-saveBtn.TextSize = 10
-saveBtn.Parent = frame
-
--- Status
-local status = Instance.new("TextLabel")
-status.Size = UDim2.new(1, 0, 0, 12)
-status.Position = UDim2.new(0, 0, 0, 48)
-status.BackgroundTransparency = 1
-status.Text = "Ramasse brainrot = TP auto"
-status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
-status.TextSize = 8
-status.Parent = frame
+-- Arrête le trait ESP
+local function stopESP()
+    if espConnection then
+        espConnection:Disconnect()
+        espConnection = nil
+    end
+    if espLine then
+        espLine:Destroy()
+        espLine = nil
+    end
+end
 
 -- DELTA TP METHOD - Plus compatible
 local function deltaTP()
@@ -125,18 +135,26 @@ local function deltaTP()
     end)
 end
 
--- Save position
+-- Save position + démarre ESP
 saveBtn.MouseButton1Click:Connect(function()
     local char = player.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
         basePosition = char.HumanoidRootPart.Position
-        saveBtn.Text = "SAVED!"
+        
+        -- Démarre le trait ESP orange
+        startESP()
+        
+        saveBtn.Text = "SAVED + ESP ON!"
         saveBtn.BackgroundColor3 = Color3.new(0, 1, 0)
+        status.Text = "Trait orange actif!"
+        status.TextColor3 = Color3.new(1, 0.5, 0)
         
         spawn(function()
-            wait(1.5)
-            saveBtn.Text = "SAVE BASE"
+            wait(2)
+            saveBtn.Text = "SAVE BASE + ESP"
             saveBtn.BackgroundColor3 = Color3.new(0, 0.7, 0)
+            status.Text = "Ramasse brainrot = TP auto"
+            status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
         end)
     end
 end)
@@ -185,4 +203,11 @@ player.CharacterAdded:Connect(function(char)
     end)
 end)
 
-print("BRAINROT AUTO TP LOADED - DELTA COMPATIBLE!")
+-- Nettoie l'ESP quand le script se ferme
+gui.AncestryChanged:Connect(function()
+    stopESP()
+end)
+
+print("BRAINROT AUTO TP + TRAIT COULEUR LOADED!")
+print("Trait orange te suit vers ta base!")
+
