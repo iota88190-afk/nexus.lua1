@@ -1,0 +1,145 @@
+-- 🧠 BRAINROT AUTO TP - DELTA COMPATIBLE 🧠
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+local basePosition = Vector3.new(0, 10, 0)
+
+pcall(function()
+    player.PlayerGui:FindFirstChild("BrainrotAutoTP"):Destroy()
+end)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "BrainrotAutoTP"
+gui.Parent = player.PlayerGui
+
+-- Interface simple
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 180, 0, 70)
+frame.Position = UDim2.new(0, 50, 0, 50)
+frame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.2)
+frame.BorderColor3 = Color3.new(1, 1, 1)
+frame.BorderSizePixel = 1
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- Titre
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 20)
+title.BackgroundColor3 = Color3.new(0.8, 0.2, 0.8)
+title.Text = "BRAINROT AUTO TP"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 12
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+-- Bouton Save
+local saveBtn = Instance.new("TextButton")
+saveBtn.Size = UDim2.new(0.9, 0, 0, 18)
+saveBtn.Position = UDim2.new(0.05, 0, 0, 25)
+saveBtn.BackgroundColor3 = Color3.new(0, 0.7, 0)
+saveBtn.Text = "SAVE BASE"
+saveBtn.TextColor3 = Color3.new(1, 1, 1)
+saveBtn.TextSize = 10
+saveBtn.Parent = frame
+
+-- Status
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, 0, 0, 12)
+status.Position = UDim2.new(0, 0, 0, 48)
+status.BackgroundTransparency = 1
+status.Text = "Ramasse brainrot = TP auto"
+status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+status.TextSize = 8
+status.Parent = frame
+
+-- DELTA TP METHOD - Plus compatible
+local function deltaTP()
+    if not basePosition then return end
+    
+    spawn(function()
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local hrp = char.HumanoidRootPart
+            
+            -- Méthode Tween (plus smooth pour Delta)
+            local tweenInfo = TweenInfo.new(0.1, Enum.EasingStyle.Linear)
+            local tween = TweenService:Create(hrp, tweenInfo, {CFrame = CFrame.new(basePosition)})
+            
+            tween:Play()
+            tween.Completed:Connect(function()
+                -- Force la position après le tween
+                hrp.CFrame = CFrame.new(basePosition)
+            end)
+            
+            status.Text = "TP BRAINROT!"
+            status.TextColor3 = Color3.new(1, 0, 1)
+            
+            wait(2)
+            status.Text = "Ramasse brainrot = TP auto"
+            status.TextColor3 = Color3.new(0.8, 0.8, 0.8)
+        end
+    end)
+end
+
+-- Save position
+saveBtn.MouseButton1Click:Connect(function()
+    local char = player.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        basePosition = char.HumanoidRootPart.Position
+        saveBtn.Text = "SAVED!"
+        saveBtn.BackgroundColor3 = Color3.new(0, 1, 0)
+        
+        spawn(function()
+            wait(1.5)
+            saveBtn.Text = "SAVE BASE"
+            saveBtn.BackgroundColor3 = Color3.new(0, 0.7, 0)
+        end)
+    end
+end)
+
+-- Détection brainrot
+local function isBrainrot(item)
+    if not item or not item:IsA("Tool") then return false end
+    
+    local name = item.Name:lower()
+    
+    -- Mots-clés brainrot
+    local brainrotWords = {"brainrot", "brain", "rot", "skibidi", "ohio", "sigma", "gyatt"}
+    
+    for _, word in pairs(brainrotWords) do
+        if name:find(word) then
+            return true
+        end
+    end
+    
+    return false
+end
+
+-- AUTO TP quand tu ramasses brainrot
+player.Backpack.ChildAdded:Connect(function(child)
+    if isBrainrot(child) then
+        print("Brainrot detected: " .. child.Name)
+        deltaTP()
+    end
+end)
+
+if player.Character then
+    player.Character.ChildAdded:Connect(function(child)
+        if isBrainrot(child) then
+            print("Brainrot equipped: " .. child.Name)
+            deltaTP()
+        end
+    end)
+end
+
+player.CharacterAdded:Connect(function(char)
+    char.ChildAdded:Connect(function(child)
+        if isBrainrot(child) then
+            print("Brainrot equipped: " .. child.Name)
+            deltaTP()
+        end
+    end)
+end)
+
+print("BRAINROT AUTO TP LOADED - DELTA COMPATIBLE!")
