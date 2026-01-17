@@ -1,0 +1,92 @@
+-- 🧠 KAMIL BRAINROT AUTO TP 🧠
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local basePosition = Vector3.new(0, 10, 0)
+
+-- GUI ultra simple
+local gui = Instance.new("ScreenGui")
+gui.Name = "KamilTP"
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 150, 0, 50)
+frame.Position = UDim2.new(0, 10, 0, 10)
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 15)
+title.Text = "🧠 KAMIL TP 🧠"
+title.TextColor3 = Color3.new(1, 0.5, 1)
+title.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+title.TextSize = 12
+title.Font = Enum.Font.SourceSansBold
+title.Parent = frame
+
+local saveBtn = Instance.new("TextButton")
+saveBtn.Size = UDim2.new(1, 0, 0, 20)
+saveBtn.Position = UDim2.new(0, 0, 0, 15)
+saveBtn.Text = "SAVE BASE"
+saveBtn.TextColor3 = Color3.new(1, 1, 1)
+saveBtn.BackgroundColor3 = Color3.new(0, 0.5, 0)
+saveBtn.TextSize = 10
+saveBtn.Parent = frame
+
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, 0, 0, 15)
+status.Position = UDim2.new(0, 0, 0, 35)
+status.Text = "Ready - By Kamil"
+status.TextColor3 = Color3.new(1, 1, 1)
+status.BackgroundTransparency = 1
+status.TextSize = 8
+status.Parent = frame
+
+-- TP ULTRA BASIQUE
+local function kamilTP()
+    if basePosition then
+        local char = player.Character
+        if char and char.HumanoidRootPart then
+            -- Méthode la plus simple possible
+            char.HumanoidRootPart.CFrame = CFrame.new(basePosition)
+            status.Text = "Kamil TP!"
+            wait(1)
+            status.Text = "Ready - By Kamil"
+        end
+    end
+end
+
+-- Save
+saveBtn.MouseButton1Click:Connect(function()
+    if player.Character and player.Character.HumanoidRootPart then
+        basePosition = player.Character.HumanoidRootPart.Position
+        saveBtn.Text = "SAVED!"
+        status.Text = "Kamil base saved!"
+        wait(1.5)
+        saveBtn.Text = "SAVE BASE"
+        status.Text = "Ready - By Kamil"
+    end
+end)
+
+-- AUTO TP sur TOUT ce que tu ramasses
+player.Backpack.ChildAdded:Connect(kamilTP)
+
+if player.Character then
+    player.Character.ChildAdded:Connect(function(child)
+        if child:IsA("Tool") then
+            kamilTP()
+        end
+    end)
+end
+
+player.CharacterAdded:Connect(function(char)
+    char.ChildAdded:Connect(function(child)
+        if child:IsA("Tool") then
+            kamilTP()
+        end
+    end)
+end)
+
+print("🧠 KAMIL BRAINROT AUTO TP LOADED!")
+print("💎 Created by Kamil")
