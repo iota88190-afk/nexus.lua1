@@ -1,0 +1,287 @@
+-- ⚡ NOXY AND VANTRIX ⚡
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local currentSpeed = 27
+local speedBoostEnabled = false -- DÉSACTIVÉ par défaut
+local stealBoostEnabled = false -- DÉSACTIVÉ par défaut
+local stealBoostSpeed = 150
+
+pcall(function()
+    player.PlayerGui:FindFirstChild("NoxyVantrix"):Destroy()
+end)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "NoxyVantrix"
+gui.Parent = player.PlayerGui
+
+-- Frame principal avec bordure verte
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 300, 0, 200)
+frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(20, 25, 35)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- Bordure verte
+local border = Instance.new("UIStroke")
+border.Color = Color3.fromRGB(0, 255, 150)
+border.Thickness = 3
+border.Parent = frame
+
+-- Coins arrondis
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 15)
+corner.Parent = frame
+
+-- Titre NOXY AND VANTRIX
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 40)
+title.Position = UDim2.new(0, 0, 0, 10)
+title.BackgroundTransparency = 1
+title.Text = "⚡ NOXY AND VANTRIX ⚡"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 20
+title.Font = Enum.Font.GothamBold
+title.Parent = frame
+
+-- Speed label
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(1, 0, 0, 25)
+speedLabel.Position = UDim2.new(0, 0, 0, 60)
+speedLabel.BackgroundTransparency = 1
+speedLabel.Text = "Speed: " .. currentSpeed
+speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+speedLabel.TextSize = 16
+speedLabel.Font = Enum.Font.Gotham
+speedLabel.Parent = frame
+
+-- Slider background
+local sliderBg = Instance.new("Frame")
+sliderBg.Size = UDim2.new(0.8, 0, 0, 8)
+sliderBg.Position = UDim2.new(0.1, 0, 0, 95)
+sliderBg.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+sliderBg.BorderSizePixel = 0
+sliderBg.Parent = frame
+
+local sliderBgCorner = Instance.new("UICorner")
+sliderBgCorner.CornerRadius = UDim.new(0, 4)
+sliderBgCorner.Parent = sliderBg
+
+-- Slider fill (partie bleue)
+local sliderFill = Instance.new("Frame")
+sliderFill.Size = UDim2.new(currentSpeed/100, 0, 1, 0)
+sliderFill.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+sliderFill.BorderSizePixel = 0
+sliderFill.Parent = sliderBg
+
+local sliderFillCorner = Instance.new("UICorner")
+sliderFillCorner.CornerRadius = UDim.new(0, 4)
+sliderFillCorner.Parent = sliderFill
+
+-- Slider button (cercle blanc)
+local sliderBtn = Instance.new("TextButton")
+sliderBtn.Size = UDim2.new(0, 20, 0, 20)
+sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
+sliderBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+sliderBtn.Text = ""
+sliderBtn.Parent = frame
+
+local sliderBtnCorner = Instance.new("UICorner")
+sliderBtnCorner.CornerRadius = UDim.new(0, 10)
+sliderBtnCorner.Parent = sliderBtn
+
+-- Speed Boost Toggle (DÉSACTIVÉ par défaut)
+local speedBoostFrame = Instance.new("Frame")
+speedBoostFrame.Size = UDim2.new(1, 0, 0, 30)
+speedBoostFrame.Position = UDim2.new(0, 0, 0, 125)
+speedBoostFrame.BackgroundTransparency = 1
+speedBoostFrame.Parent = frame
+
+local speedBoostLabel = Instance.new("TextLabel")
+speedBoostLabel.Size = UDim2.new(0.7, 0, 1, 0)
+speedBoostLabel.Position = UDim2.new(0.05, 0, 0, 0)
+speedBoostLabel.BackgroundTransparency = 1
+speedBoostLabel.Text = "Speed Boost"
+speedBoostLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedBoostLabel.TextSize = 16
+speedBoostLabel.Font = Enum.Font.Gotham
+speedBoostLabel.TextXAlignment = Enum.TextXAlignment.Left
+speedBoostLabel.Parent = speedBoostFrame
+
+local speedToggle = Instance.new("TextButton")
+speedToggle.Size = UDim2.new(0, 50, 0, 25)
+speedToggle.Position = UDim2.new(0.75, 0, 0, 2.5)
+speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- GRIS par défaut
+speedToggle.Text = ""
+speedToggle.Parent = speedBoostFrame
+
+local speedToggleCorner = Instance.new("UICorner")
+speedToggleCorner.CornerRadius = UDim.new(0, 12.5)
+speedToggleCorner.Parent = speedToggle
+
+local speedToggleBtn = Instance.new("Frame")
+speedToggleBtn.Size = UDim2.new(0, 21, 0, 21)
+speedToggleBtn.Position = UDim2.new(0, 2, 0, 2) -- À GAUCHE par défaut
+speedToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+speedToggleBtn.Parent = speedToggle
+
+local speedToggleBtnCorner = Instance.new("UICorner")
+speedToggleBtnCorner.CornerRadius = UDim.new(0, 10.5)
+speedToggleBtnCorner.Parent = speedToggleBtn
+
+-- Steal Boost Toggle (DÉSACTIVÉ par défaut)
+local stealBoostFrame = Instance.new("Frame")
+stealBoostFrame.Size = UDim2.new(1, 0, 0, 30)
+stealBoostFrame.Position = UDim2.new(0, 0, 0, 160)
+stealBoostFrame.BackgroundTransparency = 1
+stealBoostFrame.Parent = frame
+
+local stealBoostLabel = Instance.new("TextLabel")
+stealBoostLabel.Size = UDim2.new(0.7, 0, 1, 0)
+stealBoostLabel.Position = UDim2.new(0.05, 0, 0, 0)
+stealBoostLabel.BackgroundTransparency = 1
+stealBoostLabel.Text = "Steal Boost"
+stealBoostLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+stealBoostLabel.TextSize = 16
+stealBoostLabel.Font = Enum.Font.Gotham
+stealBoostLabel.TextXAlignment = Enum.TextXAlignment.Left
+stealBoostLabel.Parent = stealBoostFrame
+
+local stealToggle = Instance.new("TextButton")
+stealToggle.Size = UDim2.new(0, 50, 0, 25)
+stealToggle.Position = UDim2.new(0.75, 0, 0, 2.5)
+stealToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- GRIS par défaut
+stealToggle.Text = ""
+stealToggle.Parent = stealBoostFrame
+
+local stealToggleCorner = Instance.new("UICorner")
+stealToggleCorner.CornerRadius = UDim.new(0, 12.5)
+stealToggleCorner.Parent = stealToggle
+
+local stealToggleBtn = Instance.new("Frame")
+stealToggleBtn.Size = UDim2.new(0, 21, 0, 21)
+stealToggleBtn.Position = UDim2.new(0, 2, 0, 2) -- À GAUCHE par défaut
+stealToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+stealToggleBtn.Parent = stealToggle
+
+local stealToggleBtnCorner = Instance.new("UICorner")
+stealToggleBtnCorner.CornerRadius = UDim.new(0, 10.5)
+stealToggleBtnCorner.Parent = stealToggleBtn
+
+-- Fonction pour vérifier si c'est un brainrot
+local function isBrainrot(tool)
+    if not tool or not tool:IsA("Tool") then return false end
+    local name = tool.Name:lower()
+    local brainrotWords = {"brainrot", "brain", "rot", "skibidi", "ohio", "sigma", "gyatt"}
+    for _, word in pairs(brainrotWords) do
+        if name:find(word) then return true end
+    end
+    return false
+end
+
+-- Fonction pour vérifier si le joueur tient un brainrot
+local function isHoldingBrainrot()
+    local char = player.Character
+    if not char then return false end
+    
+    for _, child in pairs(char:GetChildren()) do
+        if isBrainrot(child) then
+            return true
+        end
+    end
+    return false
+end
+
+-- Fonctions
+local function updateSpeed()
+    local char = player.Character
+    if not char or not char:FindFirstChild("Humanoid") then return end
+    
+    if speedBoostEnabled then
+        local finalSpeed = currentSpeed
+        
+        -- STEAL BOOST: Speed bonus si tu tiens un brainrot
+        if stealBoostEnabled and isHoldingBrainrot() then
+            finalSpeed = stealBoostSpeed
+            speedLabel.Text = "Speed: " .. currentSpeed .. " (STEAL: " .. stealBoostSpeed .. ")"
+            speedLabel.TextColor3 = Color3.fromRGB(255, 100, 255)
+        else
+            speedLabel.Text = "Speed: " .. currentSpeed
+            speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        end
+        
+        char.Humanoid.WalkSpeed = finalSpeed
+    else
+        char.Humanoid.WalkSpeed = 16
+        speedLabel.Text = "Speed: " .. currentSpeed
+        speedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    end
+end
+
+local function updateSlider()
+    sliderFill.Size = UDim2.new(currentSpeed/100, 0, 1, 0)
+    sliderBtn.Position = UDim2.new(currentSpeed/100, -10, 0, -6)
+end
+
+-- Vérification continue du steal boost
+RunService.Heartbeat:Connect(function()
+    if stealBoostEnabled then
+        updateSpeed()
+    end
+end)
+
+-- Slider interaction
+local dragging = false
+sliderBtn.MouseButton1Down:Connect(function()
+    dragging = true
+end)
+
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if dragging then
+        local mouse = player:GetMouse()
+        local relativeX = math.clamp((mouse.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
+        currentSpeed = math.floor(relativeX * 100)
+        if currentSpeed < 16 then currentSpeed = 16 end
+        updateSlider()
+        updateSpeed()
+    end
+end)
+
+-- Speed Boost Toggle
+speedToggle.MouseButton1Click:Connect(function()
+    speedBoostEnabled = not speedBoostEnabled
+    if speedBoostEnabled then
+        speedToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        speedToggleBtn.Position = UDim2.new(0, 27, 0, 2)
+    else
+        speedToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        speedToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+    end
+    updateSpeed()
+end)
+
+-- Steal Boost Toggle
+stealToggle.MouseButton1Click:Connect(function()
+    stealBoostEnabled = not stealBoostEnabled
+    if stealBoostEnabled then
+        stealToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        stealToggleBtn.Position = UDim2.new(0, 27, 0, 2)
+    else
+        stealToggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        stealToggleBtn.Position = UDim2.new(0, 2, 0, 2)
+    end
+    updateSpeed()
+end)
+
+print("⚡ NOXY AND VANTRIX LOADED!")
+print("🔧 Toggles désactivés par défaut - Active-les manuellement!")
