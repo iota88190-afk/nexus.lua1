@@ -9,9 +9,8 @@ local validKeys = {
     "noxyleboss",
     "vantrixpro2024",
     "speedboost",
-    "premiumkey",
-    "9AJD8IYBZ9SUZ19DV1B8YVZ9UB8"
-}  
+    "premiumkey"
+}   "9AJD8IYBZ9SUZ19DV1B8YVZ9UB8"
 
 -- GUI Key System
 local keyGui = Instance.new("ScreenGui")
@@ -415,7 +414,7 @@ end)
 -- Get Key button - Copie le lien Discord
 getKeyBtn.MouseButton1Click:Connect(function()
     if setclipboard then
-        setclipboard("https://discord.gg/uJQKATUH")
+        setclipboard("https://discord.gg/emsBwvTT")
         keyStatus.Text = "🔗 Discord link copied! Join for keys"
         keyStatus.TextColor3 = Color3.fromRGB(0, 255, 255)
         getKeyBtn.Text = "✅ COPIED"
