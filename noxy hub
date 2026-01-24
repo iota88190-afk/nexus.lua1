@@ -1,0 +1,101 @@
+-- Interface NAMELESS + TP BLOCK (Simple)
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TitleBar = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+local NamelessButton = Instance.new("TextButton")
+local TpBlockButton = Instance.new("TextButton")
+
+-- Configuration
+ScreenGui.Name = "NoxyTools"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Main Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -70, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 140, 0, 200)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Title Bar
+TitleBar.Name = "TitleBar"
+TitleBar.Parent = MainFrame
+TitleBar.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+TitleBar.BorderSizePixel = 0
+TitleBar.Size = UDim2.new(1, 0, 0, 35)
+
+-- Title Label
+TitleLabel.Name = "TitleLabel"
+TitleLabel.Parent = TitleBar
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 5, 0, 0)
+TitleLabel.Size = UDim2.new(1, -35, 1, 0)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.Text = "Noxy Tools"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextScaled = true
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Close Button
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = TitleBar
+CloseButton.BackgroundTransparency = 1
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
+CloseButton.Size = UDim2.new(0, 30, 1, 0)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextScaled = true
+
+-- Nameless Button
+NamelessButton.Name = "NamelessButton"
+NamelessButton.Parent = MainFrame
+NamelessButton.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+NamelessButton.BorderSizePixel = 0
+NamelessButton.Position = UDim2.new(0, 8, 0, 50)
+NamelessButton.Size = UDim2.new(1, -16, 0, 55)
+NamelessButton.Font = Enum.Font.GothamBold
+NamelessButton.Text = "NAMELESS"
+NamelessButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NamelessButton.TextScaled = true
+
+-- TP Block Button
+TpBlockButton.Name = "TpBlockButton"
+TpBlockButton.Parent = MainFrame
+TpBlockButton.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+TpBlockButton.BorderSizePixel = 0
+TpBlockButton.Position = UDim2.new(0, 8, 0, 115)
+TpBlockButton.Size = UDim2.new(1, -16, 0, 55)
+TpBlockButton.Font = Enum.Font.GothamBold
+TpBlockButton.Text = "TP BLOCK"
+TpBlockButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TpBlockButton.TextScaled = true
+
+-- Button Functions
+NamelessButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ily123950/Vulkan/refs/heads/main/Tr"))()
+end)
+
+TpBlockButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/iSNbYUdR"))()
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Corner Rounding
+local function addCorners(frame)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = frame
+end
+
+addCorners(MainFrame)
+addCorners(NamelessButton)
+addCorners(TpBlockButton)
