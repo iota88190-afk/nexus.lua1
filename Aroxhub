@@ -1,0 +1,160 @@
+-- Namelles Hub Interface ComplÃ¨te
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+
+-- GUI Principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "NamellesHub"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Frame Principal
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 350, 0, 380)
+mainFrame.Position = UDim2.new(0.5, -175, 0.5, -190)
+mainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 15)
+mainCorner.Parent = mainFrame
+
+-- Header Rouge
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 60)
+header.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+header.BorderSizePixel = 0
+header.Parent = mainFrame
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 15)
+headerCorner.Parent = header
+
+-- Masquer les coins du bas du header
+local headerBottom = Instance.new("Frame")
+headerBottom.Size = UDim2.new(1, 0, 0, 30)
+headerBottom.Position = UDim2.new(0, 0, 1, -30)
+headerBottom.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+headerBottom.BorderSizePixel = 0
+headerBottom.Parent = header
+
+-- Titre
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -60, 1, 0)
+title.Position = UDim2.new(0, 20, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Namelles Hub"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextScaled = true
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = header
+
+-- Bouton X
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 40, 0, 40)
+closeBtn.Position = UDim2.new(1, -50, 0, 10)
+closeBtn.BackgroundTransparency = 1
+closeBtn.Text = "âœ•"
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.TextScaled = true
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.Parent = header
+
+-- Fonction pour crÃ©er un bouton
+local function createButton(text, position, callback)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.85, 0, 0, 60)
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+    button.BorderSizePixel = 0
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextScaled = true
+    button.Font = Enum.Font.GothamBold
+    button.Parent = mainFrame
+    
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 12)
+    buttonCorner.Parent = button
+    
+    -- Animation hover
+    button.MouseEnter:Connect(function()
+        local tween = TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(200, 40, 60)
+        })
+        tween:Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        local tween = TweenService:Create(button, TweenInfo.new(0.2), {
+            BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+        })
+        tween:Play()
+    end)
+    
+    button.MouseButton1Click:Connect(callback)
+    
+    return button
+end
+
+-- Bouton Namelles
+local namellesBtn = createButton("Namelles", UDim2.new(0.075, 0, 0, 90), function()
+    print("Namelles activÃ©!")
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ily123950/Vulkan/refs/heads/main/Tr"))()
+end)
+
+-- Bouton Speed Boost
+local speedBtn = createButton("Speed Boost", UDim2.new(0.075, 0, 0, 170), function()
+    print("Speed Boost activÃ©!")
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/K99alsGtxo/VERX-BOOSTER/refs/heads/main/made/by/the/on/and/only/verxisdagoat/on/tiktok/uwu",true))()
+end)
+
+-- Bouton Server TP
+local serverTpBtn = createButton("Server TP", UDim2.new(0.075, 0, 0, 250), function()
+    print("Server TP activÃ©!")
+    loadstring(game:HttpGet("https://tcscripts.discloud.app/scripts/servertp"))()
+end)
+
+-- Fermer le GUI
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
+
+-- Draggable
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+    end
+end)
+
+header.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+header.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+-- Animation d'ouverture
+mainFrame.Size = UDim2.new(0, 0, 0, 0)
+local openTween = TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Size = UDim2.new(0, 350, 0, 380)
+})
+openTween:Play()
+
+print("Namelles Hub chargÃ©!")
